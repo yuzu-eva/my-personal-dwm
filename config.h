@@ -1,10 +1,11 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx  = 1;        /* border pixel of windows */
+static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
+static const int focusonwheel		= 0;
 static const int gappx              = 5;
 static const char *fonts[]          = { "Hack Nerd Font:size=11", "Symbola:pixelsize=11:antialias=true:autohint=true" };
 static const char dmenufont[]       = "Hack Nerd Font:size=11";
