@@ -28,22 +28,14 @@ index 1c0b587..0927c2d 100644
  	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
  	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
  	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-+	{ MODKEY|Mod4Mask,              XK_h,      incrgaps,       {.i = +1 } },
-+	{ MODKEY|Mod4Mask,              XK_l,      incrgaps,       {.i = -1 } },
-+	{ MODKEY|Mod4Mask|ShiftMask,    XK_h,      incrogaps,      {.i = +1 } },
-+	{ MODKEY|Mod4Mask|ShiftMask,    XK_l,      incrogaps,      {.i = -1 } },
-+	{ MODKEY|Mod4Mask|ControlMask,  XK_h,      incrigaps,      {.i = +1 } },
-+	{ MODKEY|Mod4Mask|ControlMask,  XK_l,      incrigaps,      {.i = -1 } },
-+	{ MODKEY|Mod4Mask,              XK_0,      togglegaps,     {0} },
-+	{ MODKEY|Mod4Mask|ShiftMask,    XK_0,      defaultgaps,    {0} },
-+	{ MODKEY,                       XK_y,      incrihgaps,     {.i = +1 } },
-+	{ MODKEY,                       XK_o,      incrihgaps,     {.i = -1 } },
-+	{ MODKEY|ControlMask,           XK_y,      incrivgaps,     {.i = +1 } },
-+	{ MODKEY|ControlMask,           XK_o,      incrivgaps,     {.i = -1 } },
-+	{ MODKEY|Mod4Mask,              XK_y,      incrohgaps,     {.i = +1 } },
-+	{ MODKEY|Mod4Mask,              XK_o,      incrohgaps,     {.i = -1 } },
-+	{ MODKEY|ShiftMask,             XK_y,      incrovgaps,     {.i = +1 } },
-+	{ MODKEY|ShiftMask,             XK_o,      incrovgaps,     {.i = -1 } },
++	{ MODKEY,                       XK_-,      incrgaps,       {.i = +1 } },
++	{ MODKEY,                       XK_=,      incrgaps,       {.i = -1 } },
++	{ MODKEY|ShiftMask,             XK_-,      incrogaps,      {.i = +1 } },
++	{ MODKEY|ShiftMask,             XK_=,      incrogaps,      {.i = -1 } },
++	{ MODKEY|ControlMask,           XK_-,      incrigaps,      {.i = +1 } },
++	{ MODKEY|ControlMask,           XK_=,      incrigaps,      {.i = -1 } },
++	{ MODKEY,                       XK_0,      togglegaps,     {0} },
++	{ MODKEY|ShiftMask,             XK_0,      defaultgaps,    {0} },
  	{ MODKEY,                       XK_Return, zoom,           {0} },
  	{ MODKEY,                       XK_Tab,    view,           {0} },
  	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
@@ -70,10 +62,6 @@ index 9fd0286..50dbbaf 100644
 +static void incrgaps(const Arg *arg);
 +static void incrigaps(const Arg *arg);
 +static void incrogaps(const Arg *arg);
-+static void incrohgaps(const Arg *arg);
-+static void incrovgaps(const Arg *arg);
-+static void incrihgaps(const Arg *arg);
-+static void incrivgaps(const Arg *arg);
 +static void togglegaps(const Arg *arg);
 +static void defaultgaps(const Arg *arg);
  static void setlayout(const Arg *arg);
@@ -160,50 +148,6 @@ index 9fd0286..50dbbaf 100644
 +		selmon->gappov + arg->i,
 +		selmon->gappih,
 +		selmon->gappiv
-+	);
-+}
-+
-+void
-+incrohgaps(const Arg *arg)
-+{
-+	setgaps(
-+		selmon->gappoh + arg->i,
-+		selmon->gappov,
-+		selmon->gappih,
-+		selmon->gappiv
-+	);
-+}
-+
-+void
-+incrovgaps(const Arg *arg)
-+{
-+	setgaps(
-+		selmon->gappoh,
-+		selmon->gappov + arg->i,
-+		selmon->gappih,
-+		selmon->gappiv
-+	);
-+}
-+
-+void
-+incrihgaps(const Arg *arg)
-+{
-+	setgaps(
-+		selmon->gappoh,
-+		selmon->gappov,
-+		selmon->gappih + arg->i,
-+		selmon->gappiv
-+	);
-+}
-+
-+void
-+incrivgaps(const Arg *arg)
-+{
-+	setgaps(
-+		selmon->gappoh,
-+		selmon->gappov,
-+		selmon->gappih,
-+		selmon->gappiv + arg->i
 +	);
 +}
 +
