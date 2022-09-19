@@ -111,7 +111,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
 	{ MODKEY,                       XK_b,      spawn,          SHCMD("firefox") },
-	{ MODKEY,                       XK_Print,  spawn,		   SHCMD("sleep 0.3s; scrot -s") },
+	{ MODKEY,                       XK_Print,  spawn,          SHCMD("sleep 0.3s; scrot -s") },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
