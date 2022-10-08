@@ -104,15 +104,13 @@ static Key keys[] = {
 	{ MODKEY,                       XK_r,      setlayout,      {.v = &layouts[3]} },
 	{ MODKEY|ShiftMask,             XK_r,      setlayout,      {.v = &layouts[4]} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
-	/* { MODKEY,                       XK_0,      view,           {.ui = ~0 } }, */
-	/* { MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } }, */
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
 	{ MODKEY,                       XK_b,      spawn,          SHCMD("firefox") },
-	{ MODKEY,                       XK_Print,  spawn,          SHCMD("sleep 0.3s; scrot -s") },
-	{ 0,							XK_Print,  spawn,		   SHCMD("scrot -u") },
+	{ MODKEY,                       XK_Print,  spawn,          SHCMD("sleep 0.3s; scrot -s -e 'mv $f ~/Pictures/'") },
+	{ 0,                            XK_Print,  spawn,          SHCMD("scrot -u -e 'mv $f ~/Pictures/'") },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
