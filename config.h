@@ -107,6 +107,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	{ MODKEY|ControlMask,           XK_b,      spawn,          SHCMD("xdotool type $( cat ~/Documents/random/bookmarks.txt | dmenu -i -l 50)")},
 	{ MODKEY,                       XK_b,      spawn,          SHCMD("firefox") },
 	{ MODKEY,                       XK_Print,  spawn,          SHCMD("sleep 0.3s; scrot -s -e 'mv $f ~/Pictures/'") },
 	{ 0,                            XK_Print,  spawn,          SHCMD("scrot -u -e 'mv $f ~/Pictures/'") },
