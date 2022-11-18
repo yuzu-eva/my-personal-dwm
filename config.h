@@ -1,5 +1,8 @@
 /* See LICENSE file for copyright and license details. */
 
+#define TERMINAL "st"
+#define TERMCLASS "st-256color"
+
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
@@ -37,7 +40,7 @@ static const Rule rules[] = {
  	{ "Gimp",          NULL,     NULL,           0,         1,          0,           0,        -1 },
  	{ "Firefox",       NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
  	{ "kitty",         NULL,     NULL,           0,         0,          1,           0,        -1 },
- 	{ "st-256color",   NULL,     NULL,           0,         0,          1,           0,        -1 },
+ 	{ TERMCLASS,       NULL,     NULL,           0,         0,          1,           0,        -1 },
  	{ NULL,            NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
 };
 
@@ -71,7 +74,7 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "kitty", NULL };
+static const char *termcmd[]  = { TERMINAL, NULL };
 static const char *upvol[] = { "/usr/bin/pactl", "set-sink-volume", "@DEFAULT_SINK@", "+5%", NULL };
 static const char *downvol[] = { "/usr/bin/pactl", "set-sink-volume", "@DEFAULT_SINK@", "-5%", NULL };
 static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle", NULL };
@@ -108,8 +111,8 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
-	{ MODKEY|ControlMask,           XK_b,      spawn,          SHCMD("xdotool type $( grep -v '^#' ~/Documents/random/bookmarks.txt | dmenu -i -l 50 | cut -d' ' -f1)")},
-	{ MODKEY|ControlMask,           XK_l,      spawn,          SHCMD("cat $( /usr/bin/ls -d ~/Documents/lyrics/* | dmenu -i -l 50)")},
+	{ MODKEY|ControlMask,           XK_b,      spawn,          SHCMD("xdotool type $( grep -v '^#' ~/Documents/random/bookmarks.txt | dmenu -i -l 50 | cut -d' ' -f1 )") },
+	{ MODKEY|ControlMask,           XK_l,      spawn,          SHCMD("xdotool type \"cat $( /usr/bin/ls -d ~/Documents/lyrics/* | dmenu -i -l 50)\"") },
 	{ MODKEY,                       XK_b,      spawn,          SHCMD("firefox") },
 	{ MODKEY,                       XK_Print,  spawn,          SHCMD("sleep 0.3s; scrot -s -e 'mv $f ~/Pictures/'") },
 	{ 0,                            XK_Print,  spawn,          SHCMD("scrot -u -e 'mv $f ~/Pictures/'") },
