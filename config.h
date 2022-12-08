@@ -39,7 +39,6 @@ static const Rule rules[] = {
  	/* class           instance  title           tags mask  isfloating  isterminal  noswallow  monitor */
  	{ "Gimp",          NULL,     NULL,           0,         1,          0,           0,        -1 },
  	{ "Firefox",       NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
- 	{ "kitty",         NULL,     NULL,           0,         0,          1,           0,        -1 },
  	{ TERMCLASS,       NULL,     NULL,           0,         0,          1,           0,        -1 },
  	{ NULL,            NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
 };
@@ -111,12 +110,12 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
-	{ MODKEY|ControlMask,           XK_b,      spawn,          SHCMD("xdotool type $( grep -v '^#' ~/Documents/random/bookmarks.txt | dmenu -i -l 50 | cut -d' ' -f1 )") },
-	{ MODKEY|ControlMask,           XK_l,      spawn,          SHCMD("xdotool type \"cat $( /usr/bin/ls -d ~/Documents/lyrics/* | dmenu -i -l 50)\"") },
+	{ MODKEY|ControlMask,           XK_b,      spawn,          SHCMD("xdotool type $( grep -v '^#' ~/docs/random/bookmarks.txt | dmenu -i -l 50 | cut -d' ' -f1 )") },
+	{ MODKEY|ControlMask,           XK_l,      spawn,          SHCMD("xdotool type \"cat $( /usr/bin/ls -d ~/docs/lyrics/* | dmenu -i -l 50)\"") },
 	{ MODKEY,                       XK_b,      spawn,          SHCMD("firefox") },
 	{ MODKEY,                       XK_e,      spawn,          SHCMD("emacsclient -c -a 'emacs'") },
-	{ MODKEY,                       XK_Print,  spawn,          SHCMD("sleep 0.3s; scrot -s -e 'mv $f ~/Pictures/'") },
-	{ 0,                            XK_Print,  spawn,          SHCMD("scrot -u -e 'mv $f ~/Pictures/'") },
+	{ MODKEY,                       XK_Print,  spawn,          SHCMD("sleep 0.3s; scrot -s -e 'mv $f ~/pics/'") },
+	{ 0,                            XK_Print,  spawn,          SHCMD("scrot -u -e 'mv $f ~/pics/'") },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
