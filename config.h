@@ -117,6 +117,8 @@ static Key keys[] = {
 	{ MODKEY|ControlMask,           XK_l,              spawn,          SHCMD("xdotool type \"cat $( /usr/bin/ls -d ~/docs/lyrics/* | dmenu -i -l 50)\"") },
 	{ MODKEY,                       XK_b,              spawn,          SHCMD("firefox") },
 	{ MODKEY,                       XK_e,              spawn,          SHCMD("emacsclient -c -a 'emacs'") },
+	{ MODKEY,                       XK_v,              spawn,          SHCMD("st pulsemixer") },
+	{ MODKEY,                       XK_n,              spawn,          SHCMD("st newsboat") },
 	{ MODKEY,                       XK_Print,          spawn,          SHCMD("sleep 0.3s; scrot -s -e 'mv $f ~/pics/'") },
 	{ 0,                            XK_Print,          spawn,          SHCMD("scrot -u -e 'mv $f ~/pics/'") },
 	TAGKEYS(                        XK_1,                      0)
