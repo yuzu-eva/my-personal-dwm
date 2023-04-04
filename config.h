@@ -10,7 +10,7 @@ static const unsigned int gappih    = 10;       /* horiz inner gap between windo
 static const unsigned int gappiv    = 10;       /* vert inner gap between windows */
 static const unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
 static const unsigned int gappov    = 10;       /* vert outer gap between windows and screen edge */
-static const int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
+static const int smartgaps          = 1;        /* 1 means no outer gap when there is only one window */
 static const int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
@@ -113,12 +113,14 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period,         focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,          tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period,         tagmon,         {.i = +1 } },
+	{ MODKEY,                       XK_b,              spawn,          {.v = (const char*[]){ "firefox", NULL } } },
+	{ MODKEY,                       XK_v,              spawn,          {.v = (const char*[]){ "firefox", "-P", "other", NULL } } },
+	{ MODKEY,                       XK_e,              spawn,          {.v = (const char*[]){ "emacsclient", "-c", "-a", "emacs", NULL } } },
+	{ MODKEY|ShiftMask,             XK_v,              spawn,          {.v = (const char*[]){ TERMINAL, "pulsemixer", NULL } } },
+	{ MODKEY|ShiftMask,             XK_n,              spawn,          {.v = (const char*[]){ TERMINAL, "newsboat", NULL } } },
+	{ MODKEY|ShiftMask,             XK_y,              spawn,          {.v = (const char*[]){ TERMINAL, "ytdl", NULL } } },
 	{ MODKEY|ControlMask,           XK_b,              spawn,          SHCMD("xdotool type $( grep -v '^#' ~/docs/random/bookmarks.txt | dmenu -i -l 50 | cut -d' ' -f1 )") },
 	{ MODKEY|ControlMask,           XK_l,              spawn,          SHCMD("xdotool type \"cat $( /usr/bin/ls -d ~/docs/lyrics/* | dmenu -i -l 50)\"") },
-	{ MODKEY,                       XK_b,              spawn,          SHCMD("firefox") },
-	{ MODKEY,                       XK_e,              spawn,          SHCMD("emacsclient -c -a 'emacs'") },
-	{ MODKEY,                       XK_v,              spawn,          SHCMD("st pulsemixer") },
-	{ MODKEY,                       XK_n,              spawn,          SHCMD("st newsboat") },
 	{ MODKEY,                       XK_Print,          spawn,          SHCMD("sleep 0.3s; scrot -s -e 'mv $f ~/pics/'") },
 	{ 0,                            XK_Print,          spawn,          SHCMD("scrot -u -e 'mv $f ~/pics/'") },
 	TAGKEYS(                        XK_1,                      0)
