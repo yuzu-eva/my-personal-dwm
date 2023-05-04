@@ -4,12 +4,12 @@
 #define TERMCLASS "st-256color"
 
 /* appearance */
-static const unsigned int borderpx  = 3;        /* border pixel of windows; 3 is min pixels needed for smooth rounded corners */
+static const unsigned int borderpx  = 0;        /* border pixel of windows; 3 is min pixels needed for smooth rounded corners */
 static const unsigned int snap      = 32;       /* snap pixel */
-static const unsigned int gappih    = 10;       /* horiz inner gap between windows */
-static const unsigned int gappiv    = 10;       /* vert inner gap between windows */
-static const unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
-static const unsigned int gappov    = 10;       /* vert outer gap between windows and screen edge */
+static const unsigned int gappih    = 0;       /* horiz inner gap between windows */
+static const unsigned int gappiv    = 0;       /* vert inner gap between windows */
+static const unsigned int gappoh    = 0;       /* horiz outer gap between windows and screen edge */
+static const unsigned int gappov    = 0;       /* vert outer gap between windows and screen edge */
 static const int smartgaps          = 1;        /* 1 means no outer gap when there is only one window */
 static const int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
 static const int showbar            = 1;        /* 0 means no bar */
@@ -120,8 +120,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_v,              spawn,          {.v = (const char*[]){ TERMINAL, "pulsemixer", NULL } } },
 	{ MODKEY|ShiftMask,             XK_n,              spawn,          {.v = (const char*[]){ TERMINAL, "newsboat", NULL } } },
 	{ MODKEY|ShiftMask,             XK_y,              spawn,          {.v = (const char*[]){ TERMINAL, "ytdl", NULL } } },
-	{ MODKEY|ControlMask,           XK_b,              spawn,          SHCMD("xdotool type $( grep -v '^#' ~/docs/random/bookmarks.txt | dmenu -i -l 50 | cut -d' ' -f1 )") },
-	{ MODKEY|ControlMask,           XK_l,              spawn,          SHCMD("xdotool type \"cat $( /bin/ls -d ~/docs/lyrics/* | dmenu -i -l 50)\"") },
+	{ MODKEY|ControlMask,           XK_b,              spawn,          SHCMD("$BROWSER $(grep -v '^#' ~/docs/random/bookmarks.txt | dmenu -i -l 50 | cut -d' ' -f1)") },
 	{ MODKEY,                       XK_q,              spawn,          SHCMD("~/.local/bin/qrshare") },
 	{ MODKEY,                       XK_Print,          spawn,          SHCMD("sleep 0.3s; scrot -s -e 'mv $f ~/pics/'") },
 	{ 0,                            XK_Print,          spawn,          SHCMD("scrot -u -e 'mv $f ~/pics/'") },
