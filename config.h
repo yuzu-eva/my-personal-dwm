@@ -39,7 +39,7 @@ static const Rule rules[] = {
  	/* class           instance  title           tags mask  isfloating  isterminal  noswallow  monitor */
  	{ "Gimp",          NULL,     NULL,           0,         1,          0,           0,        -1 },
  	{ "Firefox",       NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
- 	{ "IceCat",        NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
+ 	{ "nyxt",   NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
  	{ TERMCLASS,       NULL,     NULL,           0,         0,          1,           0,        -1 },
  	{ NULL,            NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
 };
@@ -114,13 +114,13 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period,         focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,          tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period,         tagmon,         {.i = +1 } },
-	{ MODKEY,                       XK_b,              spawn,          {.v = (const char*[]){ "icecat", NULL } } },
+	{ MODKEY,                       XK_b,              spawn,          {.v = (const char*[]){ "nyxt", NULL } } },
 	{ MODKEY,                       XK_v,              spawn,          {.v = (const char*[]){ "firefox-bin", NULL } } },
 	{ MODKEY,                       XK_e,              spawn,          {.v = (const char*[]){ "emacsclient", "-c", "-a", "emacs", NULL } } },
 	{ MODKEY|ShiftMask,             XK_v,              spawn,          {.v = (const char*[]){ TERMINAL, "pulsemixer", NULL } } },
 	{ MODKEY|ShiftMask,             XK_n,              spawn,          {.v = (const char*[]){ TERMINAL, "newsboat", NULL } } },
 	{ MODKEY|ShiftMask,             XK_y,              spawn,          {.v = (const char*[]){ TERMINAL, "ytdl", NULL } } },
-	{ MODKEY|ControlMask,           XK_b,              spawn,          SHCMD("$BROWSER $(grep -v '^#' ~/docs/random/bookmarks.txt | dmenu -i -l 50 | cut -d' ' -f1)") },
+	{ MODKEY|ControlMask,           XK_b,              spawn,          SHCMD("$BROWSER $(grep -v '^#' ~/.config/bookmarks | dmenu -i -l 50 | cut -d' ' -f1)") },
 	{ MODKEY,                       XK_q,              spawn,          SHCMD("~/.local/bin/qrshare") },
 	{ MODKEY,                       XK_Print,          spawn,          SHCMD("sleep 0.3s; scrot -s -e 'mv $f ~/pics/'") },
 	{ 0,                            XK_Print,          spawn,          SHCMD("scrot -u -e 'mv $f ~/pics/'") },
