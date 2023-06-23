@@ -78,6 +78,7 @@ typedef union {
 	int i;
 	unsigned int ui;
 	float f;
+	float sf;
 	const void *v;
 } Arg;
 
@@ -123,17 +124,12 @@ typedef struct {
 struct Monitor {
 	char ltsymbol[16];
 	float mfact;
+	float smfact;
 	int nmaster;
 	int num;
 	int by;               /* bar geometry */
 	int mx, my, mw, mh;   /* screen size */
 	int wx, wy, ww, wh;   /* window area  */
-	int gappih;           /* horizontal gap between windows */
-	int gappiv;           /* vertical gap between windows */
-	int gappoh;           /* horizontal outer gaps */
-	int gappov;           /* vertical outer gaps */
-	int gappx;            /* gaps between windows */
-	unsigned int borderpx;
 	unsigned int seltags;
 	unsigned int sellt;
 	unsigned int tagset[2];
@@ -212,19 +208,19 @@ static void run(void);
 static void scan(void);
 static int sendevent(Client *c, Atom proto);
 static void sendmon(Client *c, Monitor *m);
-static void setborderpx(const Arg *arg);
 static void setclientstate(Client *c, long state);
 static void setfocus(Client *c);
 static void setfullscreen(Client *c, int fullscreen);
 static void setlayout(const Arg *arg);
 static void setmfact(const Arg *arg);
+static void setsmfact(const Arg *arg);
 static void setup(void);
 static void seturgent(Client *c, int urg);
 static void showhide(Client *c);
-static void sigchld(int unused);
 static void spawn(const Arg *arg);
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
+static void tile(Monitor *m);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
 static void toggletag(const Arg *arg);
@@ -710,14 +706,10 @@ createmon(void)
 	m = ecalloc(1, sizeof(Monitor));
 	m->tagset[0] = m->tagset[1] = 1;
 	m->mfact = mfact;
+	m->smfact = smfact;
 	m->nmaster = nmaster;
 	m->showbar = showbar;
 	m->topbar = topbar;
-	m->borderpx = borderpx;
-	m->gappih = gappih;
-	m->gappiv = gappiv;
-	m->gappoh = gappoh;
-	m->gappov = gappov;
 	m->lt[0] = &layouts[0];
 	m->lt[1] = &layouts[1 % LENGTH(layouts)];
 	strncpy(m->ltsymbol, layouts[0].symbol, sizeof m->ltsymbol);
@@ -788,7 +780,7 @@ drawbar(Monitor *m)
 		return;
 
 	/* draw status first so it can be overdrawn by tags later */
-	if (m == selmon || 1) { /* status is only drawn on all monitors */
+	if (m == selmon || 1) { /* status is only drawn on selected monitor */
 		drw_setscheme(drw, scheme[SchemeNorm]);
 		tw = TEXTW(stext) - lrpad + 2; /* 2px right padding */
 		drw_text(drw, m->ww - tw, 0, tw, bh, 0, stext, 0);
@@ -1015,16 +1007,26 @@ grabkeys(void)
 {
 	updatenumlockmask();
 	{
-		unsigned int i, j;
+		unsigned int i, j, k;
 		unsigned int modifiers[] = { 0, LockMask, numlockmask, numlockmask|LockMask };
-		KeyCode code;
+		int start, end, skip;
+		KeySym *syms;
 
 		XUngrabKey(dpy, AnyKey, AnyModifier, root);
-		for (i = 0; i < LENGTH(keys); i++)
-			if ((code = XKeysymToKeycode(dpy, keys[i].keysym)))
-				for (j = 0; j < LENGTH(modifiers); j++)
-					XGrabKey(dpy, code, keys[i].mod | modifiers[j], root,
-						True, GrabModeAsync, GrabModeAsync);
+		XDisplayKeycodes(dpy, &start, &end);
+		syms = XGetKeyboardMapping(dpy, start, end - start + 1, &skip);
+		if (!syms)
+			return;
+		for (k = start; k <= end; k++)
+			for (i = 0; i < LENGTH(keys); i++)
+				/* skip modifier codes, we do that ourselves */
+				if (keys[i].keysym == syms[(k - start) * skip])
+					for (j = 0; j < LENGTH(modifiers); j++)
+						XGrabKey(dpy, k,
+							 keys[i].mod | modifiers[j],
+							 root, True,
+							 GrabModeAsync, GrabModeAsync);
+		XFree(syms);
 	}
 }
 
@@ -1112,7 +1114,7 @@ manage(Window w, XWindowAttributes *wa)
 		c->y = c->mon->wy + c->mon->wh - HEIGHT(c);
 	c->x = MAX(c->x, c->mon->wx);
 	c->y = MAX(c->y, c->mon->wy);
-	c->bw = c->mon->borderpx;
+	c->bw = borderpx;
 
 	wc.border_width = c->bw;
 	XConfigureWindow(dpy, w, CWBorderWidth, &wc);
@@ -1472,40 +1474,6 @@ sendmon(Client *c, Monitor *m)
 }
 
 void
-setborderpx(const Arg *arg)
-{
-	Client *c;
-	int prev_borderpx = selmon->borderpx;
-
-	if (arg->i == 0)
-		selmon->borderpx = borderpx;
-	else if (selmon->borderpx + arg->i < 0)
-		selmon->borderpx = 0;	
-	else
-		selmon->borderpx += arg->i;	
-	
-	for (c = selmon->clients; c; c = c->next)
-	{	
-		if (c->bw + arg->i < 0)
-			c->bw = selmon->borderpx = 0;
-		else
-			c->bw = selmon->borderpx;
-		if (c->isfloating || !selmon->lt[selmon->sellt]->arrange)
-		{
-			if (arg->i != 0 && prev_borderpx + arg->i >= 0)
-				resize(c, c->x, c->y, c->w-(arg->i*2), c->h-(arg->i*2), 0);
-			else if (arg->i != 0)
-				resizeclient(c, c->x, c->y, c->w, c->h);
-			else if (prev_borderpx > borderpx)
-				resize(c, c->x, c->y, c->w + 2*(prev_borderpx - borderpx), c->h + 2*(prev_borderpx - borderpx), 0);
-			else if (prev_borderpx < borderpx)
-				resize(c, c->x, c->y, c->w-2*(borderpx - prev_borderpx), c->h-2*(borderpx - prev_borderpx), 0);
-		}
-	}
-	arrange(selmon);
-}
-
-void
 setclientstate(Client *c, long state)
 {
 	long data[] = { state, None };
@@ -1609,14 +1577,34 @@ setmfact(const Arg *arg)
 }
 
 void
+setsmfact(const Arg *arg) {
+	float sf;
+
+	if(!arg || !selmon->lt[selmon->sellt]->arrange)
+		return;
+	sf = arg->sf < 1.0 ? arg->sf + selmon->smfact : arg->sf - 1.0;
+	if(sf < 0 || sf > 0.9)
+		return;
+	selmon->smfact = sf;
+	arrange(selmon);
+}
+
+void
 setup(void)
 {
 	int i;
 	XSetWindowAttributes wa;
 	Atom utf8string;
+	struct sigaction sa;
 
-	/* clean up any zombies immediately */
-	sigchld(0);
+	/* do not transform children into zombies when they terminate */
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_NOCLDSTOP | SA_NOCLDWAIT | SA_RESTART;
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGCHLD, &sa, NULL);
+
+	/* clean up any zombies (inherited from .xinitrc etc) immediately */
+	while (waitpid(-1, NULL, WNOHANG) > 0);
 
 	/* init screen */
 	screen = DefaultScreen(dpy);
@@ -1710,22 +1698,22 @@ showhide(Client *c)
 }
 
 void
-sigchld(int unused)
-{
-	if (signal(SIGCHLD, sigchld) == SIG_ERR)
-		die("can't install SIGCHLD handler:");
-	while (0 < waitpid(-1, NULL, WNOHANG));
-}
-
-void
 spawn(const Arg *arg)
 {
+	struct sigaction sa;
+
 	if (arg->v == dmenucmd)
 		dmenumon[0] = '0' + selmon->num;
 	if (fork() == 0) {
 		if (dpy)
 			close(ConnectionNumber(dpy));
 		setsid();
+
+		sigemptyset(&sa.sa_mask);
+		sa.sa_flags = 0;
+		sa.sa_handler = SIG_DFL;
+		sigaction(SIGCHLD, &sa, NULL);
+
 		execvp(((char **)arg->v)[0], (char **)arg->v);
 		die("dwm: execvp '%s' failed:", ((char **)arg->v)[0]);
 	}
@@ -1747,6 +1735,47 @@ tagmon(const Arg *arg)
 	if (!selmon->sel || !mons->next)
 		return;
 	sendmon(selmon->sel, dirtomon(arg->i));
+}
+
+void
+tile(Monitor *m)
+{
+	unsigned int i, n, h, smh, mw, my, ty;
+	Client *c;
+
+	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
+	if (n == 0)
+		return;
+
+	if (n > m->nmaster)
+		mw = m->nmaster ? m->ww * m->mfact : 0;
+	else
+		mw = m->ww;
+	for (i = my = ty = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
+		if (i < m->nmaster) {
+			h = (m->wh - my) / (MIN(n, m->nmaster) - i);
+			resize(c, m->wx, m->wy + my, mw - (2*c->bw), h - (2*c->bw), 0);
+			if (my + HEIGHT(c) < m->wh)
+				my += HEIGHT(c);
+		} else {
+			smh = m->mh * m->smfact;
+			if(!(nexttiled(c->next)))
+				h = (m->wh - ty) / (n - i);
+			else
+				h = (m->wh - smh - ty) / (n - i);
+			if(h < minwsz) {
+				c->isfloating = True;
+				XRaiseWindow(dpy, c->win);
+				resize(c, m->mx + (m->mw / 2 - WIDTH(c) / 2), m->my + (m->mh / 2 - HEIGHT(c) / 2), m->ww - mw - (2*c->bw), h - (2*c->bw), False);
+				ty -= HEIGHT(c);
+			}
+			else
+				resize(c, m->wx + mw, m->wy + ty, m->ww - mw - (2*c->bw), h - (2*c->bw), False);
+			if(!(nexttiled(c->next)))
+				ty += HEIGHT(c) + smh;
+			else
+				ty += HEIGHT(c);
+		}
 }
 
 void
@@ -2284,11 +2313,6 @@ wintomon(Window w)
 int
 xerror(Display *dpy, XErrorEvent *ee)
 {
-	/* int opcode, event, error; */
-	/* if (XQueryExtension(dpy, "RENDER", &opcode, &event, &error) */
-	/* || (ee->request_code == opcode && ee->error_code == BadLength)) */
-	/* 	return 0; */
-
 	if (ee->error_code == BadWindow
 	|| (ee->request_code == X_SetInputFocus && ee->error_code == BadMatch)
 	|| (ee->request_code == X_PolyText8 && ee->error_code == BadDrawable)
