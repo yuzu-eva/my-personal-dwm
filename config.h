@@ -4,14 +4,13 @@
 #define TERMCLASS "st-256color"
 
 /* appearance */
-static const unsigned int borderpx  = 0;        /* border pixel of windows */
+static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const unsigned int minwsz    = 20;		/* Minimal height of a client for smfact */
 static const int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const int focusonwheel       = 0;
-static const char *fonts[]          = { "Hack Nerd Font:size=11", "JoyPixels:pixelsize:11:antialias=true:autohint=true"};
+static const char *fonts[]          = { "Hack Nerd Font:size=11", "JoyPixels:pixelsize:10:antialias=true:autohint=true"};
 static const char dmenufont[]       = "Hack Nerd Font:size=11";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
@@ -36,7 +35,7 @@ static const Rule rules[] = {
  	{ "Gimp",          NULL,     NULL,           0,         1,          0,           0,        -1 },
  	{ "Firefox",       NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
 	{ "floating",	   NULL,     NULL,           0,         1,          0,           0,        -1 },
-	{ "Steam",         NULL,     NULL,           0,         1,          0,          -1,        -1 },
+	{ "steam",         NULL,     NULL,           0,         1,          0,          -1,        -1 },
  	{ TERMCLASS,       NULL,     NULL,           0,         0,          1,           0,        -1 },
  	{ NULL,            NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
 };
@@ -79,7 +78,7 @@ static Key keys[] = {
 	/* modifier                     key                function        argument */
 	{ MODKEY,                       XK_p,              spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return,         spawn,          {.v = termcmd } },
-	{ MODKEY|ShiftMask,             XK_b,              togglebar,      {0} },
+	{ MODKEY|ShiftMask|ControlMask, XK_b,              togglebar,      {0} },
 	{ MODKEY,                       XK_j,              focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,              focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_i,              incnmaster,     {.i = +1 } },
@@ -91,7 +90,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_Return,         zoom,           {0} },
 	{ MODKEY,                       XK_Tab,            view,           {0} },
 	{ MODKEY|ShiftMask,             XK_c,              killclient,     {0} },
-	{ MODKEY,                       XK_t,              setlayout,      {.v = &layouts[0]} },
+	{ MODKEY,                       XK_b,              setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,              setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,              setlayout,      {.v = &layouts[2]} },
 	{ MODKEY|ShiftMask,             XK_space,          togglefloating, {0} },
@@ -99,15 +98,15 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period,         focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,          tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period,         tagmon,         {.i = +1 } },
-	{ MODKEY,                       XK_b,              spawn,          {.v = (const char*[]){ "firefox-bin", "-P", "default-release", NULL } } },
-	{ MODKEY,                       XK_v,              spawn,          {.v = (const char*[]){ "firefox-bin", "-P", "less-strict",  NULL } } },
-	{ MODKEY,                       XK_e,              spawn,          {.v = (const char*[]){ "emacsclient", "-c", "-a", "emacs", NULL } } },
-	{ MODKEY|ShiftMask,             XK_v,              spawn,          {.v = (const char*[]){ TERMINAL, "pulsemixer", NULL } } },
+	{ MODKEY|ShiftMask,             XK_f,              spawn,          {.v = (const char*[]){ "firefox", "-P", "default-release", NULL } } },
+	{ MODKEY|ShiftMask,             XK_b,              spawn,          {.v = (const char*[]){ "firefox", "-P", "less-strict",  NULL } } },
+	{ MODKEY|ShiftMask,             XK_e,              spawn,          {.v = (const char*[]){ "emacsclient", "-c", "-a", "emacs", NULL } } },
 	{ MODKEY|ShiftMask,             XK_n,              spawn,          {.v = (const char*[]){ TERMINAL, "newsboat", NULL } } },
-	{ MODKEY|ShiftMask,             XK_y,              spawn,          {.v = (const char*[]){ TERMINAL, "ytdl", NULL } } },
-	{ MODKEY,                       XK_c,              spawn,          {.v = (const char*[]){ "mpdmenu", NULL } } },
+	{ MODKEY|ShiftMask,             XK_m,              spawn,          {.v = (const char*[]){ "mpdinfo", NULL } } },
+	{ MODKEY|ShiftMask,             XK_v,              spawn,          {.v = (const char*[]){ TERMINAL, "pulsemixer", NULL } } },
+	{ MODKEY|ControlMask,           XK_c,              spawn,          {.v = (const char*[]){ "mpdmenu", NULL } } },
 	{ MODKEY|ControlMask,           XK_b,              spawn,          SHCMD("$BROWSER $(grep -v '^#' ~/.config/bookmarks | dmenu -i -l 50 | cut -d' ' -f1)") },
-	{ MODKEY,                       XK_q,              spawn,          SHCMD("~/.local/bin/qrshare") },
+	{ MODKEY|ControlMask,           XK_q,              spawn,          SHCMD("~/.local/bin/qrshare") },
 	{ MODKEY,                       XK_Print,          spawn,          SHCMD("sleep 0.3s; scrot -s -e 'mv $f ~/pics/'") },
 	{ 0,                            XK_Print,          spawn,          SHCMD("scrot -u -e 'mv $f ~/pics/'") },
 	TAGKEYS(                        XK_1,                      0)
